@@ -20,5 +20,64 @@ void sortbybursttime(struct process p[], int n){
         }
     }
 }
+void findtimes(struct process p[], int n){
+    p[0].completion_time = p[0].arrival_time + p[0].burst_time;
+    p[0].turnaround_time = p[0].completion_time - p[0].arrival_time;
+    p[0].waiting_time = p[0].turnaround_time - p[0].burst_time;
+    for(int i=1; i<n; i++){
+        int start_time = (p[i-1].completion_time > p[i].arrival_time) ? p[i-1].completion_time : p[i].arrival_time;
+        p[i].completion_time = start_time + p[i].burst_time;
+        p[i].turnaround_time = p[i].completion_time - p[i].arrival_time;
+        p[i].waiting_time = p[i].turnaround_time - p[i].burst_time;
+
+    }
+
+}
+void printresults(struct process p[], int n){
+    float average_waiting_time = 0;
+    float average_turnaround_time = 0;
+    printf("PID\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\tCompletion Time\n");
+    for(int i=0; i<n; i++){
+        average_waiting_time += p[i].waiting_time;
+        average_turnaround_time += p[i].turnaround_time;
+        printf("%d\t%d\t%d\t%d\t%d\t%d\t\n",
+               p[i].pid, p[i].arrival_time, p[i].burst_time,
+               p[i].waiting_time, p[i].turnaround_time, p[i].completion_time);
+
+    }
+    average_turnaround_time/= n;
+    average_waiting_time /= n;
+    printf("Average Waiting Time: %.2f\n", average_waiting_time);
+    printf("Average Turnaround Time: %.2f\n", average_turnaround_time);
+}
+int main() {
+    int n;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    struct process processes[n];
+    for (int i = 0; i < n; i++) {
+        processes[i].pid = i + 1;
+        printf("Enter arrival time and burst time for process P%d: ", i + 1);
+        scanf("%d %d", &processes[i].arrival_time, &processes[i].burst_time);
+    }
+    // sort by arrival time first
+    for(int i=0; i<n-1; i++){
+        for(int j=0; j<n-i-1; j++){
+            if(processes[j].arrival_time > processes[j+1].arrival_time){
+                struct process temp= processes[j];
+                processes[j] = processes[j+1];
+                processes[j+1] = temp;
+            }
+        }
+    }
+    // Then sort by burst time (SJF)
+    sortbybursttime(processes, n);
+
+    findtimes(processes, n);
+    printresults(processes, n);
+    return 0;
+
+}
 
 
