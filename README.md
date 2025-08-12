@@ -2,4 +2,4 @@
 - [x] FCFS
 - [x] SJF
 - [x] Round Robin
-- [ ] Priority scheduling
+- [x] Priority scheduling
