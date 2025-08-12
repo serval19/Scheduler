@@ -1,5 +1,5 @@
 # Different CPU scheduling algorithms using C
 - [x] FCFS
-- [ ] SJF
-- [ ] Round Robin
+- [x] SJF
+- [x] Round Robin
 - [ ] Priority scheduling
